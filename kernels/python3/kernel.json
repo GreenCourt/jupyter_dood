@@ -1,0 +1,9 @@
+{
+ "argv": [
+  "ipykernel-docker",
+  "{connection_file}"
+ ],
+ "env": {"TAG":""},
+ "display_name": "Python 3",
+ "language": "python"
+}

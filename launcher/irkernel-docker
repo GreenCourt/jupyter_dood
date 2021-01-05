@@ -1,0 +1,19 @@
+#!/bin/sh
+[ $# -ne 1 ] && echo invalid argument >&2 && exit 1
+
+if [ -z "$TAG" ]
+then
+  TAG="$(basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null)"
+  [ -z "$TAG" -o -z "$(docker image ls -q "$TAG" 2>/dev/null)" ] && exit 1
+fi
+
+cat "$1" | exec docker run --rm --init -i \
+--net=container:jupyter_dood \
+-u ${HOST_UID}:${HOST_GID} -e HOME=/tmp --userns=host \
+--mount type=bind,src="${HOST_HOME}",dst="${HOST_HOME}" \
+-w "${PWD}" \
+-e TZ=Asia/Tokyo \
+$(nvidia-smi >/dev/null 2>&1 && echo --gpus all -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_CAPABILITIES=all) \
+--entrypoint='' \
+$TAG \
+sh -c "cat > /tmp/connection_file && exec R --slave -e 'IRkernel::main()' --args /tmp/connection_file"

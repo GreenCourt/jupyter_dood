@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+if [ ! -d /home/me ]
+then
+  useradd -u $HOST_UID -o -m me
+  groupmod -g $HOST_GID me
+  groupadd -g $HOST_DOCKER_GID -o docker
+  usermod -aG docker me
+fi
+
+if [ ! -f /key.key -o ! -f /cert.pem ]
+then
+  openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /key.key -out /cert.pem -subj "/CN=self"
+  chown me /key.key /cert.pem
+fi
+
+exec gosu me python3 -m jupyter classic \
+--ip=0.0.0.0 \
+--ServerApp.token='' \
+--ServerApp.base_url='' \
+--port=8888 \
+--port-retries=0 \
+--FileCheckpoints.checkpoint_dir='/tmp/ipynb_checkpoints' \
+--no-browser \
+#--certfile=/cert.pem \
+#--keyfile=/key.key \
+;

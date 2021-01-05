@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  jupyter:
+    container_name: "jupyter_dood"
+    image: "jupyter_dood"
+    build:
+      context: ./build
+      args:
+        - DOCKER_CLIENT_VERSION=19.03.13
+    init: true
+    userns_mode: "host"
+    network_mode: "host"
+    #runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - HOST_HOME=${HOME}
+      - TZ=Asia/Tokyo
+      - SHELL=/bin/bash
+      - HOST_UID=1000
+      - HOST_GID=1000
+      - HOST_DOCKER_GID=999
+    volumes:
+      - ./entrypoint:/entrypoint:ro
+      - ./launcher/ipykernel-docker:/usr/local/bin/ipykernel-docker:ro
+      - ./launcher/irkernel-docker:/usr/local/bin/irkernel-docker:ro
+      - ./kernels:/usr/local/share/jupyter/kernels:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}:${HOME}
+    working_dir: ${HOME}
+    entrypoint: /entrypoint
