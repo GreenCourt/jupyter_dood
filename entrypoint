@@ -3,7 +3,7 @@ set -e
 
 if [ ! -d /home/me ]
 then
-  useradd -u $HOST_UID -o -m me
+  useradd -u $HOST_UID -o -m -s /bin/bash me
   groupmod -g $HOST_GID me
   groupadd -g $HOST_DOCKER_GID -o docker
   usermod -aG docker me
