@@ -1,9 +1,0 @@
-{
- "argv": [
-  "irkernel-docker",
-  "{connection_file}"
- ],
- "env": {"TAG":""},
- "display_name": "R",
- "language": "R"
-}

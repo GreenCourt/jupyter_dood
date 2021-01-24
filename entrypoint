@@ -15,6 +15,8 @@ then
   chown me /key.key /cert.pem
 fi
 
+chown -R me:me $JUPYTER_RUNTIME_DIR
+
 exec gosu me python3 -m jupyter classic \
 --ip=0.0.0.0 \
 --ServerApp.token='' \

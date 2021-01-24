@@ -1,9 +1,9 @@
 {
  "argv": [
   "ipykernel-docker",
+  "continuumio/anaconda3:latest",
   "{connection_file}"
  ],
- "env": {"TAG":""},
- "display_name": "Python 3",
+ "display_name": "Anaconda 3",
  "language": "python"
 }

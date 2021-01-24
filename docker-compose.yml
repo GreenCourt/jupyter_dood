@@ -15,15 +15,18 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
       - TZ=Asia/Tokyo
+      - TOPLEVEL=${HOME}
       - HOST_UID=1000
       - HOST_GID=1000
       - HOST_DOCKER_GID=999
+      - JUPYTER_RUNTIME_DIR=/jupyter_runtime_dir
     volumes:
       - ./entrypoint:/entrypoint:ro
       - ./launcher/ipykernel-docker:/usr/local/bin/ipykernel-docker:ro
       - ./launcher/irkernel-docker:/usr/local/bin/irkernel-docker:ro
       - ./kernels:/usr/local/share/jupyter/kernels:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - /jupyter_runtime_dir
       - ${HOME}:${HOME}
     working_dir: ${HOME}
     entrypoint: /entrypoint
