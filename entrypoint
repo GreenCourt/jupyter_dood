@@ -9,22 +9,14 @@ then
   usermod -aG docker me
 fi
 
-if [ ! -f /key.key -o ! -f /cert.pem ]
-then
-  openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /key.key -out /cert.pem -subj "/CN=self"
-  chown me /key.key /cert.pem
-fi
-
 chown -R me:me $JUPYTER_RUNTIME_DIR
 
 exec gosu me python3 -m jupyter classic \
---ip=0.0.0.0 \
+--ip=127.0.0.1 \
 --ServerApp.token='' \
 --ServerApp.base_url='' \
 --port=8888 \
 --port-retries=0 \
 --FileCheckpoints.checkpoint_dir='/tmp/ipynb_checkpoints' \
 --no-browser \
-#--certfile=/cert.pem \
-#--keyfile=/key.key \
 ;
